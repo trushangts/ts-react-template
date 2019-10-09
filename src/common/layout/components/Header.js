@@ -18,21 +18,18 @@ export default class Header extends React.Component {
           <span id="logo">
             <img
               src="assets/img/logo.png" // place your logo here
-              alt="SmartAdmin"
+              alt="ts-admin-templete"
             />
           </span>
           {/* Note: The activity badge color changes when clicked and resets the number to 0
          Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications */}
 
-          <Activities />
+          {/* <Activities /> */}
         </div>
 
-        <RecentProjects />
+        {/* <RecentProjects /> */}
         <div className="pull-right" /*pulled right: nav area*/>
-          <ToggleMenu
-            className="btn-header pull-right" /* collapse menu button */
-          />
-
+          <ToggleMenu className="btn-header pull-right"/>
           {/* #MOBILE */}
           {/*  Top menu profile link : this shows only when top menu is active */}
           <ul
@@ -137,12 +134,12 @@ export default class Header extends React.Component {
             </a>
           </form>
 
-          <SpeechButton className="btn-header transparent pull-right hidden-sm hidden-xs" />
-
-          <FullScreen className="btn-header transparent pull-right" />
-
+          {/* <SpeechButton className="btn-header transparent pull-right hidden-sm hidden-xs" /> */}
+          {/* <FullScreen className="btn-header transparent pull-right" /> */}
           {/* multiple lang dropdown : find all flags in the flags page */}
-          <LanguageSelector />
+          {/* <LanguageSelector /> */}
+
+
         </div>
         {/* end pulled right: nav area */}
       </header>

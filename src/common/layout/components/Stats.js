@@ -42,7 +42,7 @@ export default class Stats extends React.Component {
         <ul id="sparks" className={className}>
           <li className="sparks-info">
             <h5 className="m-0">
-              My Income
+              My Income3
               <span className="txt-color-blue"> {stats.income.total}</span>
             </h5>
             <Sparkline

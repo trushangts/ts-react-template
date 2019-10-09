@@ -19,27 +19,27 @@ export default class Dashboard extends React.Component {
             items={["Dashboard", "My Dashboard"]}
             className="col-xs-12 col-sm-7 col-md-7 col-lg-4"
           />
-          <Stats />
+          {/* <Stats /> */}
         </div>
 
         <WidgetGrid>
           <div className="row">
             <article className="col-sm-12">
-              <LiveFeeds />
+              {/* <LiveFeeds /> */}
             </article>
           </div>
 
           <div className="row">
             <article className="col-sm-12 col-md-12 col-lg-6">
-              <ChatWidget />
+              {/* <ChatWidget /> */}
 
-              <FullCalendarWidget />
+              {/* <FullCalendarWidget /> */}
             </article>
 
             <article className="col-sm-12 col-md-12 col-lg-6">
-              <BirdEyeWidget />
+              {/* <BirdEyeWidget /> */}
 
-              <TodoWidget />
+              {/* <TodoWidget /> */}
             </article>
           </div>
         </WidgetGrid>

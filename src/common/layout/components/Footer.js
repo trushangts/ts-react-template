@@ -9,18 +9,18 @@ export default class Footer extends React.Component {
         <div className="row">
           <div className="col-xs-12 col-sm-6">
             <span className="txt-color-white">
-              SmartAdmin 1.9.X - Web Application Framework © 2017-2019
+             TS React JS Template By Developer @ 2019
             </span>
           </div>
 
           <div className="col-xs-6 col-sm-6 text-right hidden-xs">
             <div className="txt-color-white inline-block">
-              <i className="txt-color-blueLight hidden-mobile">
+              {/* <i className="txt-color-blueLight hidden-mobile">
                 Last account activity <i className="fa fa-clock-o" /> &nbsp;
                 <strong>52 mins ago &nbsp;</strong>
-              </i>
+              </i> */}
 
-              <Dropdown
+              {/* <Dropdown
                 className="btn-group dropup"
                 id="footer-progress-dropdown"
               >
@@ -82,7 +82,7 @@ export default class Footer extends React.Component {
                     </div>
                   </MenuItem>
                 </Dropdown.Menu>
-              </Dropdown>
+              </Dropdown> */}
             </div>
           </div>
         </div>

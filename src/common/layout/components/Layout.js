@@ -18,9 +18,9 @@ class Layout extends React.Component {
         <Header />
         <Navigation />
         <div id="main" role="main">
-          <LayoutSwitcher />
+          {/* <LayoutSwitcher /> */}
           <Ribbon />
-
+          
           <Switch>
             {routes.map((route, idx) => {
               return route.component ? (
@@ -36,6 +36,7 @@ class Layout extends React.Component {
             <Redirect from="/" to="/misc/404" />
             {/* <Redirect from="/" to="/dashboard/analytics" /> */}
           </Switch>
+          {console.log()}
         </div>
 
         <Footer />
