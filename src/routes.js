@@ -13,6 +13,8 @@ import { routes as tables } from "./views/tables";
 import { routes as ui } from "./views/ui";
 import { routes as widgets } from "./views/widgets";
 
+import { routes as employee } from "./views/employee";
+
 export const routes = [
   
   ...appViews,
@@ -27,7 +29,8 @@ export const routes = [
   ...smartadminIntel,
   ...tables,
   ...ui,
-  ...widgets
+  ...widgets,
+  ...employee
 ];
 
 export const authRoutes = [

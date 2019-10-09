@@ -10,7 +10,7 @@
           "title": "Add Employee"
         },
         {
-          "route": "/dashboard/social-wall",
+          "route": "/employee",
           "title": "Manage Employee"
         }
       ]
