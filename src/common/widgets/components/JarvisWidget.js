@@ -7,10 +7,10 @@ export default class JarvisWidget extends React.Component {
   static counter = 0;
 
   static defaultProps = {
-    colorbutton: true,
+    colorbutton: false,
     editbutton: true,
     togglebutton: true,
-    deletebutton: true,
+    deletebutton: false,
     fullscreenbutton: true,
     custombutton: false,
     collapsed: false,
