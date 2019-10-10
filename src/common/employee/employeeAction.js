@@ -11,7 +11,7 @@ export const DELETE_EVENT = 'DELETE_EVENT'
 
 const ROOT_URL = 'https://udemy-utils.herokuapp.com/api/v1'
 const QUERYSTRING = '?token=token123'
-
+const API_URL = "";
 
 export const empGetEvent = values => async dispatch => {
   const response = await axios.post(`http://192.168.0.157/reactApp/React_16.x/server/employee.php?action=index`, values)
@@ -20,8 +20,7 @@ export const empGetEvent = values => async dispatch => {
 
 export const empAddEvent = values => async dispatch => {
   console.log('empAddEvent');
-  console.log(values);
-  const payload = values;
-  //const response = await axios.post(`${ROOT_URL}/events${QUERYSTRING}`, values)
-  dispatch({ type: CREATE_EMP, payload })
+  const response = await axios.post(`http://192.168.0.157/reactApp/React_16.x/server/employee.php?action=add`, JSON.stringify(values))
+  console.log(response);
+  dispatch({ type: CREATE_EMP, response })
 }
