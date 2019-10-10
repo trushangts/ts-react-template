@@ -6,6 +6,8 @@ import {JarvisWidget} from "../../../common";
 import Datatable from "../../../common/tables/components/Datatable";
 import { connect } from 'react-redux'
 import { empGetEvent,empAddEvent } from "../../../common/employee/employeeAction.js";
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
 
 class EmployeeList extends React.Component {
 
@@ -16,8 +18,40 @@ class EmployeeList extends React.Component {
     
         this.state = {
           fields : {},
-          error : {}
+          error : {},
+          employeedata : []
         }    
+    }
+
+    componentWillMount() {
+        //alert("componentWillMount")
+        console.log("componentWillMount==>") 
+        console.log(this.props.employee) 
+    }
+    
+    componentDidMount() {
+        // alert("componentDidMount")
+        this.props.empGetEvent()  //Function use to dispatch action
+        // console.log("compontes Didmount:")      
+        // console.log(this.props.employee); 
+    }
+
+    componentDiUpdate(){
+        // alert("componentDiUpdate")
+        // console.log("componentDiUpdate==>")
+        // console.log(this.props.employee)
+    }
+
+    UNSAFE_componentWillUpdate(){
+        // alert("UNSAFE_componentWillUpdate")        
+        // console.log("UNSAFE_componentWillUpdate==>")
+        // console.log(this.props.employee)
+    }
+
+    UNSAFE_componentWillReceiveProps(){
+        // alert("UNSAFE_componentWillReceiveProps")
+        // console.log("UNSAFE_componentWillReceiveProps==>")
+        // console.log(this.props.employee)                
     }
 
     handleChange(e) {
@@ -25,7 +59,6 @@ class EmployeeList extends React.Component {
         fields[e.target.name] = e.target.value;
         this.setState({fields});
     }
-
 
     async submitemployeeRegistrationForm(e) {
         e.preventDefault();
@@ -43,123 +76,129 @@ class EmployeeList extends React.Component {
         // }    
     }
 
-
     render() {
+        
+        const selectRowProp = {
+			mode: 'checkbox',
+			clickToSelect: true,
+			bgColor: 'lightgrey'
+		};
+        
+        const options = {
+			sizePerPageList: [{
+				text: '5', value: 5
+			}, {
+				text: '10', value: 10
+			}, {
+				text: '25', value: 25
+			}, {
+				text: '50', value: 50
+			}, {
+				text: '100', value: 100
+			}, {
+				text: 'All', value: 100
+			}],
+			sizePerPage: 10,
+			page: 1,
+			sortName: 'id',
+			sortOrder: 'desc',
+			prePage: 'Prev',
+			nextPage: 'Next',
+			firstPage: 'First',
+			lastPage: 'Last',
+			paginationPosition: 'both',
+			paginationShowsTotal: this.renderShowsTotal
+        };
+        
+        console.log("Render:");
+        console.log(this.props.employee);        
+        
         return (
-        <div id="content" className="">
-            <div className="row">
-                <BigBreadcrumbs
-                    items={["Employee", "Employee List"]}
-                    className="col-xs-12 col-sm-7 col-md-7 col-lg-4"
-                />       
-                <button className="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add New Employee</button>
-            </div>
-
-            <WidgetGrid>
+            <div id="content" className="">
                 <div className="row">
-                    <article className="col-sm-12">
-                        <JarvisWidget id="wid-id-0" editbutton={false} color="darken">
-                            <header>
-                                <span className="widget-icon">
-                                    <i className="fa fa-table" />
-                                </span>
-                                <h2 className="test">Employee List Redux</h2>
-                            </header>
-                            <div>
-                                <div className="widget-body no-padding">
-                                    <Datatable
-                                        options={{
-                                            ajax: "http://192.168.0.157/reactApp/React_16.x/server/employee.php?action=index",
-                                            columns: [
-                                                { data: "id" },
-                                                { data: "name" },
-                                                { data: "email" },
-                                                { data: "phone" },
-                                                { data: "department" },
-                                                { data: "status" }                                        
-                                            ]
-                                        }}
-                                        paginationLength={true}
-                                        className="table table-striped table-bordered table-hover"
-                                        width="100%"
-                                    >
-                                    <thead>
-                                        <tr>
-                                        <th data-hide="phone">ID</th>
-                                        <th data-class="expand">
-                                            <i className="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs" />
-                                            Name
-                                        </th>
-                                        <th data-hide="phone">
-                                            <i className="fa fa-fw fa-phone text-muted hidden-md hidden-sm hidden-xs" />
-                                            Email
-                                        </th>
-                                        <th>Phone</th>
-                                        <th data-hide="phone,tablet">
-                                            <i className="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs" />
-                                            Department
-                                        </th>
-                                        <th data-hide="phone,tablet">Status</th>                                        
-                                        </tr>
-                                    </thead>
-                                    </Datatable>
-                                </div>
-                            </div>
-                        </JarvisWidget>                    
-                    </article>
+                    <BigBreadcrumbs
+                        items={["Employee", "Employee List"]}
+                        className="col-xs-12 col-sm-7 col-md-7 col-lg-4"
+                    />       
+                    <button className="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add New Employee</button>
                 </div>
-            </WidgetGrid>
-            {/***** Model Body Start  *****/}
-            <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div className="modal-dialog">
-                <div className="modal-content">
-                <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 className="modal-title" id="myModalLabel">Add Employee</h4>
-                </div>
-                <form className="" method="post"  name="employeeRegistrationForm"  onSubmit= {this.submitemployeeRegistrationForm} >
-                <div className="modal-body">
+
+                <WidgetGrid>
                     <div className="row">
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label htmlFor="name">Name</label>
-                            <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email</label>
-                            <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="phone">Phone</label>
-                            <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="phone">Department</label>
-                            <select className="input-sm form-control" name="department" onChange={this.handleChange}>
-                                <option value="0">Choose Department</option>
-                                <option value="PHP Developer">PHP Developer</option>
-                                <option value="Android Developer">Android Developer</option>
-                                <option value="iOS Developer">iOS Developer</option>
-                                <option value="BDE">BDE</option>
-                            </select>
-                        </div>
-                    </div>                  
+                        <article className="col-sm-12">
+                            <JarvisWidget id="wid-id-0" editbutton={false} color="darken">
+                                <header>
+                                    <span className="widget-icon">
+                                        <i className="fa fa-table" />
+                                    </span>
+                                    <h2 className="test">Employee List Redux</h2>
+                                </header>
+                                <div>
+                                    <div className="widget-body no-padding">
+                                        <BootstrapTable data={this.props.employee} version='4' pagination={true} selectRow={selectRowProp} options={options} ref='table' search>
+                                            <TableHeaderColumn isKey dataField='id' hidden={this.state.hidden}>ID</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='name'  dataSort={true} width='15%'>Name</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='email' dataSort={true} width='20%'>Email</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='phone' dataSort={true} width='20%'>Phone</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='department' dataSort={true} width='30%'>Department</TableHeaderColumn>									
+                                        </BootstrapTable> 
+                                    </div>
+                                </div>
+                            </JarvisWidget>                    
+                        </article>
                     </div>
+                </WidgetGrid>
+                {/***** Model Body Start  *****/}
+                <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 className="modal-title" id="myModalLabel">Add Employee</h4>
+                    </div>
+                    <form className="" method="post"  name="employeeRegistrationForm"  onSubmit= {this.submitemployeeRegistrationForm} >
+                    <div className="modal-body">
+                        <div className="row">
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="name">Name</label>
+                                <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email</label>
+                                <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="phone">Phone</label>
+                                <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="phone">Department</label>
+                                <select className="input-sm form-control" name="department" onChange={this.handleChange}>
+                                    <option value="0">Choose Department</option>
+                                    <option value="PHP Developer">PHP Developer</option>
+                                    <option value="Android Developer">Android Developer</option>
+                                    <option value="iOS Developer">iOS Developer</option>
+                                    <option value="BDE">BDE</option>
+                                </select>
+                            </div>
+                        </div>                  
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" className="btn btn-primary">Save</button>                
+                    </div>
+                    </form>
+                    </div>            
+                </div>          
                 </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" className="btn btn-primary">Save</button>                
-                </div>
-                </form>
-                </div>            
-            </div>          
+                {/*****  Model Body End  *****/}
             </div>
-            {/*****  Model Body End  *****/}
-      </div>
-    );
-  }
+        );
+    }
 }
 
 const mapDispatchToProps = { empGetEvent ,empAddEvent}
-
-export default connect(null, mapDispatchToProps)(EmployeeList)
+const mapStateToProps = state => ({ employee: state.employee })
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList)

@@ -5,6 +5,7 @@ export const READ_EVENTS = 'READ_EVENTS'
 export const READ_EVENT = 'READ_EVENT'
 export const CREATE_EVENT = 'CREATE_EVENT'
 export const CREATE_EMP = 'CREATE_EMP'
+export const READ_EMPS = 'READ_EMPS'
 export const UPDATE_EVENT = 'UPDATE_EVENT'
 export const DELETE_EVENT = 'DELETE_EVENT'
 
@@ -13,9 +14,8 @@ const QUERYSTRING = '?token=token123'
 
 
 export const empGetEvent = values => async dispatch => {
-   let response = {};
-  //const response = await axios.post(`${ROOT_URL}/events${QUERYSTRING}`, values)
-  dispatch({ type: CREATE_EVENT, response })
+  const response = await axios.post(`http://192.168.0.157/reactApp/React_16.x/server/employee.php?action=index`, values)
+  dispatch({ type: READ_EMPS, response })
 }
 
 export const empAddEvent = values => async dispatch => {

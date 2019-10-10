@@ -1,21 +1,16 @@
-import {CREATE_EMP} from "./employeeAction";
+import {CREATE_EMP,READ_EMPS} from "./employeeAction";
 
-export function employeeReducer(
-  state = {
-    username: null,
-    picture: null,
-    activity: null
-  },
-  action
-) {
+export function employeeReducer(employee = [],action) {
   switch (action.type) {
     case CREATE_EMP:
-      console.log("Create Emp Reducer Called")
-      console.log(action)
       return {
         ...action.payload
       };
+    case READ_EMPS:
+        return [
+          ...action.response.data.data
+        ];
     default:
-      return state;
+      return employee;
   }
 }
