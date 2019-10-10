@@ -6,12 +6,16 @@
       "icon": "fa fa-lg fa-fw fa-home",
       "items": [
         {
-          "route": "/dashboard/analytics",
+          "route": "/add_employee",
           "title": "Add Employee"
         },
         {
           "route": "/employee",
           "title": "Manage Employee"
+        },
+        {
+          "route": "/employeelist",
+          "title": "Manage Employee Redux"
         }
       ]
     },
