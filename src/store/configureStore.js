@@ -10,6 +10,8 @@ import {
   layoutReducer
 } from "../common/layout";
 
+import { employeeReducer } from "../common/employee";
+
 import { userReducer, requestUserInfo } from "../common/user";
 import { navigationReducer } from "../common/navigation";
 import { chatReducer, chatInit } from "../common/chat";
@@ -33,7 +35,8 @@ export const rootReducer = combineReducers({
   events: eventsReducer,
   voice: voiceReducer,
   todo: todoReducer,
-  i18n: i18nReducer
+  i18n: i18nReducer,
+  employee : employeeReducer
 });
 
 const store = createStore(

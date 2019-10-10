@@ -1,3 +1,4 @@
+import { getJSON } from "../../common/utils/functions";
 import axios from 'axios'
 
 export const READ_EVENTS = 'READ_EVENTS'
@@ -20,7 +21,7 @@ export const empGetEvent = values => async dispatch => {
 export const empAddEvent = values => async dispatch => {
   console.log('empAddEvent');
   console.log(values);
-  const response = values;
+  const payload = values;
   //const response = await axios.post(`${ROOT_URL}/events${QUERYSTRING}`, values)
-  dispatch({ type: CREATE_EMP, response })
+  dispatch({ type: CREATE_EMP, payload })
 }
