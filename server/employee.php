@@ -8,30 +8,59 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 switch ($action) {
+
     case "index":
-        $query = "SELECT * FROM {$table}";
-        $result = $con->query($query);
-        $employee_arr=array();
-        $employee_arr["data"]=array();
-        if ($result->num_rows > 0) {
-            $employee_arr["code"]=200;
-            while($row = $result->fetch_assoc()) {
-                extract($row);
-                $employee_item=array(
-                    "id" => $id,
-                    "name" => $name,
-                    "email" => $email,
-                    "phone" => $phone,
-                    "department" => $department,
-                    "status" => $status
-                );               
-                array_push($employee_arr["data"], $employee_item);
+        $data = json_decode(file_get_contents('php://input'), true);
+        if(empty($data)){
+            $query = "SELECT * FROM {$table}";
+            $result = $con->query($query);
+            $employee_arr=array();
+            $employee_arr["data"]=array();
+            if ($result->num_rows > 0) {
+                $employee_arr["code"]=200;
+                while($row = $result->fetch_assoc()) {
+                    extract($row);
+                    $employee_item=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "email" => $email,
+                        "phone" => $phone,
+                        "department" => $department,
+                        "status" => $status
+                    );
+                    array_push($employee_arr["data"], $employee_item);
+                }
+            } else {
+                $employee_arr["code"]=400;
             }
-            
-        } else {
-            $employee_arr["code"]=400;
-        }        
-        echo json_encode($employee_arr);
+            echo json_encode($employee_arr);
+            exit;
+        }else{
+            $query2 = "SELECT * FROM {$table} WHERE id = {$data['id']}";
+            $result2 = $con->query($query2);
+            $employee_arr=array();
+            $employee_arr["data"]=array();
+
+            if ($result2->num_rows > 0) {
+                $employee_arr["code"]=200;
+                while($row = $result2->fetch_assoc()) {
+                    extract($row);
+                    $employee_item=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "email" => $email,
+                        "phone" => $phone,
+                        "department" => $department,
+                        "status" => $status
+                    );
+                    array_push($employee_arr["data"], $employee_item);
+                }
+            } else {
+                $employee_arr["code"]=400;
+            }
+            echo json_encode($employee_arr);
+            exit;
+        }
         break;
 
     case "add":
