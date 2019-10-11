@@ -21,11 +21,14 @@ class EmployeeList extends React.Component {
         this.submitemployeeRegistrationForm = this.submitemployeeRegistrationForm.bind(this);
     
         this.state = {
+            employee : {},
             fields : {},
+            selected : {},
             error : {},
             employeedata : [],
             danger: false,
-            modalEdit: false
+            modalEdit: false,
+            hidden : true
         }    
     }
 
@@ -56,8 +59,9 @@ class EmployeeList extends React.Component {
 
     UNSAFE_componentWillReceiveProps(){
         // alert("UNSAFE_componentWillReceiveProps")
-        // console.log("UNSAFE_componentWillReceiveProps==>")
-        // console.log(this.props.employee)                
+        console.log("UNSAFE_componentWillReceiveProps==>")
+        // console.log(this.props.employee)              
+        console.log('employee:',this.state.employee)  
     }
 
     handleChange(e) {
@@ -85,16 +89,22 @@ class EmployeeList extends React.Component {
     actionButton(cell, row, enumObject, rowIndex) {
         return (
             <div>
-                <button type="button" onClick={() => this.onClickEditSelected(cell, row, rowIndex)}>Edit { row.id }</button>
+                <button type="button" className="btn btn-sm btn-primary" onClick={() => this.onClickEditSelected(cell, row, rowIndex)}>Edit { row.id }</button>
                 &nbsp;&nbsp;
-                <button type="button" onClick={() => this.onClickDeleteSelected(cell, row, rowIndex)}>Delete { row.id }</button>
+                <button type="button" className="btn btn-sm btn-danger" onClick={() => this.onClickDeleteSelected(cell, row, rowIndex)}>Delete { row.id }</button>
             </div>
         )
     }
 
     onClickEditSelected(cell, row, rowIndex){
         console.log('Edit #', row.id);
+        this.props.empGetIdEvent(row.id)  //Function use to dispatch action
+        this.state.selected = this.props.employee.find((element) => {
+            return element.id === row.id;
+        })
+        console.log('Employee Edit',this.state.selected)
         this.toggleEdit();
+
     }
     
     onClickDeleteSelected(cell, row, rowIndex){
@@ -161,8 +171,7 @@ class EmployeeList extends React.Component {
                         items={["Employee", "Employee List"]}
                         className="col-xs-12 col-sm-7 col-md-7 col-lg-4"
                     />       
-                    <button className="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add New Employee</button>
-                    <button className="btn btn-primary btn-lg" onClick={this.toggleEdit} data-toggle="modal">edit New Employee</button>
+                    <button className="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Add New Employee</button>                    
                 </div>
 
                 <WidgetGrid>
@@ -249,15 +258,15 @@ class EmployeeList extends React.Component {
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label htmlFor="name">Name</label>
-                                                <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
+                                                <input type="text" className="form-control" name="name" id="name" value={this.state.selected.name} placeholder="" onChange={this.handleChange}/>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="email">Email</label>
-                                                <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
+                                                <input type="text" className="form-control" name="email" id="email" value={this.state.selected.email} placeholder="" onChange={this.handleChange}/>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="phone">Phone</label>
-                                                <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
+                                                <input type="text" className="form-control" name="phone" id="phone" value={this.state.selected.phone} placeholder="" onChange={this.handleChange}/>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="phone">Department</label>
@@ -272,8 +281,8 @@ class EmployeeList extends React.Component {
                                         </div>
                                     </div>
                                 <div className="text-right">
-                                    <button type="button" className="btn btn-success btn-lg" onClick={this.toggleEdit}>Cancel</button>&nbsp;&nbsp;
-                                    <button type="button" className="btn btn-success btn-lg" onClick={this.props.onHide}>Save</button>
+                                    <button type="button" className="btn btn-sm btn-primary" onClick={this.toggleEdit}>Cancel</button>&nbsp;&nbsp;
+                                    <button type="button" className="btn btn-sm btn-sucess" onClick={this.props.onHide}>Save</button>
                                 </div>
                             </Modal.Body>
                         </form>
@@ -285,6 +294,6 @@ class EmployeeList extends React.Component {
     }
 }
 
-const mapDispatchToProps = { empGetEvent ,empAddEvent}
+const mapDispatchToProps = { empGetEvent ,empAddEvent,empGetIdEvent}
 const mapStateToProps = state => ({ employee: state.employee })
 export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList)
