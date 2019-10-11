@@ -8,18 +8,24 @@ import { connect } from 'react-redux'
 import { empGetEvent,empAddEvent } from "../../../common/employee/employeeAction.js";
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
+import { Modal,ModalHeader,ModalBody,ModalFooter,Button } from "react-bootstrap";
+
 
 class EmployeeList extends React.Component {
 
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.toggleDanger = this.toggleDanger.bind(this);
+        this.toggleEdit = this.toggleEdit.bind(this);
         this.submitemployeeRegistrationForm = this.submitemployeeRegistrationForm.bind(this);
     
         this.state = {
-          fields : {},
-          error : {},
-          employeedata : []
+            fields : {},
+            error : {},
+            employeedata : [],
+            danger: false,
+            modalEdit: false
         }    
     }
 
@@ -58,6 +64,18 @@ class EmployeeList extends React.Component {
         let fields = this.state.fields;
         fields[e.target.name] = e.target.value;
         this.setState({fields});
+    }
+
+    toggleEdit() {
+        this.setState({
+            modalEdit: !this.state.modalEdit
+        });
+    }
+
+    toggleDanger() {
+        this.setState({
+            danger: !this.state.danger
+        });
     }
 
     async submitemployeeRegistrationForm(e) {
@@ -109,10 +127,10 @@ class EmployeeList extends React.Component {
 			paginationPosition: 'both',
 			paginationShowsTotal: this.renderShowsTotal
         };
-        
-        console.log("Render:");
-        console.log(this.props.employee);        
-        
+
+        //console.log("Render:");
+        //console.log(this.props.employee);
+
         return (
             <div id="content" className="">
                 <div className="row">
@@ -121,6 +139,8 @@ class EmployeeList extends React.Component {
                         className="col-xs-12 col-sm-7 col-md-7 col-lg-4"
                     />       
                     <button className="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add New Employee</button>
+                    <button className="btn btn-primary btn-lg" onClick={this.toggleEdit} data-toggle="modal">edit New Employee</button>
+
                 </div>
 
                 <WidgetGrid>
@@ -140,60 +160,78 @@ class EmployeeList extends React.Component {
                                             <TableHeaderColumn dataField='name'  dataSort={true} width='15%'>Name</TableHeaderColumn>
                                             <TableHeaderColumn dataField='email' dataSort={true} width='20%'>Email</TableHeaderColumn>
                                             <TableHeaderColumn dataField='phone' dataSort={true} width='20%'>Phone</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='department' dataSort={true} width='30%'>Department</TableHeaderColumn>									
-                                        </BootstrapTable> 
+                                            <TableHeaderColumn dataField='department' dataSort={true} width='20%'>Department</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='action' dataFormat={ actionFormatter }>Action</TableHeaderColumn>
+                                        </BootstrapTable>
                                     </div>
                                 </div>
                             </JarvisWidget>                    
                         </article>
                     </div>
                 </WidgetGrid>
-                {/***** Model Body Start  *****/}
+
+                {/***** Add Model Body Start  *****/}
                 <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                    <div className="modal-header">
-                        <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 className="modal-title" id="myModalLabel">Add Employee</h4>
-                    </div>
-                    <form className="" method="post"  name="employeeRegistrationForm"  onSubmit= {this.submitemployeeRegistrationForm} >
-                    <div className="modal-body">
-                        <div className="row">
-                        <div className="col-md-6">
-                            <div className="form-group">
-                                <label htmlFor="name">Name</label>
-                                <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 className="modal-title" id="myModalLabel">Add Employee</h4>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="email">Email</label>
-                                <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
+                        <form className="" method="post"  name="employeeRegistrationForm"  onSubmit= {this.submitemployeeRegistrationForm} >
+                            <div className="modal-body">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="name">Name</label>
+                                            <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="email">Email</label>
+                                            <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="phone">Phone</label>
+                                            <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="phone">Department</label>
+                                            <select className="input-sm form-control" name="department" onChange={this.handleChange}>
+                                                <option value="0">Choose Department</option>
+                                                <option value="PHP Developer">PHP Developer</option>
+                                                <option value="Android Developer">Android Developer</option>
+                                                <option value="iOS Developer">iOS Developer</option>
+                                                <option value="BDE">BDE</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="phone">Phone</label>
-                                <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="phone">Department</label>
-                                <select className="input-sm form-control" name="department" onChange={this.handleChange}>
-                                    <option value="0">Choose Department</option>
-                                    <option value="PHP Developer">PHP Developer</option>
-                                    <option value="Android Developer">Android Developer</option>
-                                    <option value="iOS Developer">iOS Developer</option>
-                                    <option value="BDE">BDE</option>
-                                </select>
-                            </div>
-                        </div>                  
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" className="btn btn-primary">Save</button>
+                        </div>
+                        </form>
                         </div>
                     </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" className="btn btn-primary">Save</button>                
-                    </div>
-                    </form>
-                    </div>            
-                </div>          
                 </div>
-                {/*****  Model Body End  *****/}
+                {/*****  Add Model Body End  *****/}
+
+                {/*****  Edit Model Body Start  *****/}
+                    <Modal show={this.state.modalEdit}>
+                        <Modal.Body>
+                            <h1>Edit Employee</h1>
+                            <hr className="simple" />
+                            <h5>Instruction</h5>
+
+                            <div className="text-right">
+                                <button type="button" className="btn btn-success btn-lg" onClick={this.toggleEdit}>Cancel</button>
+                                <button type="button" className="btn btn-success btn-lg" onClick={this.props.onHide}>Save</button>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+                {/*****  Edit Model Body End  *****/}
+
             </div>
         );
     }
@@ -202,3 +240,53 @@ class EmployeeList extends React.Component {
 const mapDispatchToProps = { empGetEvent ,empAddEvent}
 const mapStateToProps = state => ({ employee: state.employee })
 export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList)
+
+
+
+class ActionButtonFormatter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.toggleEdit = this.toggleEdit.bind(this);
+
+        this.state = {
+            modalEdit: false
+        }
+    }
+
+    toggleEdit() {
+        this.setState({
+            modalEdit: !this.state.modalEdit
+        });
+    }
+
+
+    handleEditClick = () => {
+        console.log("Edit Button Clicked=>");
+        console.log(this.props.active);
+        this.setState({
+            modalEdit: !this.state.modalEdit
+        });
+        console.log(this.state)
+    }
+
+    handleDeleteClick = () => {
+        console.log("Delete Button Clicked");
+    }
+
+    render() {
+        return (
+            <div>
+                <button onClick={ this.handleEditClick }>Edit {this.props.active.id}</button>
+                &nbsp;&nbsp;
+                <button onClick={ this.handleDeleteClick }>Delete</button>
+            </div>
+        );
+    }
+}
+
+function actionFormatter(cell, row) {
+    return (
+        <ActionButtonFormatter active={ row }/>
+    );
+}
