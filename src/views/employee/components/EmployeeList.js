@@ -5,7 +5,7 @@ import { BigBreadcrumbs } from "../../../common/navigation";
 import {JarvisWidget} from "../../../common";
 import Datatable from "../../../common/tables/components/Datatable";
 import { connect } from 'react-redux'
-import { empGetEvent,empAddEvent } from "../../../common/employee/employeeAction.js";
+import { empGetEvent,empAddEvent,empGetIdEvent } from "../../../common/employee/employeeAction.js";
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { Modal,ModalHeader,ModalBody,ModalFooter,Button } from "react-bootstrap";
@@ -78,6 +78,29 @@ class EmployeeList extends React.Component {
         });
     }
 
+    handleDeleteClick = () => {
+        console.log("Delete Button Clicked");
+    }
+
+    actionButton(cell, row, enumObject, rowIndex) {
+        return (
+            <div>
+                <button type="button" onClick={() => this.onClickEditSelected(cell, row, rowIndex)}>Edit { row.id }</button>
+                &nbsp;&nbsp;
+                <button type="button" onClick={() => this.onClickDeleteSelected(cell, row, rowIndex)}>Delete { row.id }</button>
+            </div>
+        )
+    }
+
+    onClickEditSelected(cell, row, rowIndex){
+        console.log('Edit #', row.id);
+        this.toggleEdit();
+    }
+    
+    onClickDeleteSelected(cell, row, rowIndex){
+        console.log('Delete #', row.id);
+    }
+    
     async submitemployeeRegistrationForm(e) {
         e.preventDefault();
         await this.props.empAddEvent(this.state.fields)
@@ -140,7 +163,6 @@ class EmployeeList extends React.Component {
                     />       
                     <button className="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add New Employee</button>
                     <button className="btn btn-primary btn-lg" onClick={this.toggleEdit} data-toggle="modal">edit New Employee</button>
-
                 </div>
 
                 <WidgetGrid>
@@ -154,14 +176,14 @@ class EmployeeList extends React.Component {
                                     <h2 className="test">Employee List Redux</h2>
                                 </header>
                                 <div>
-                                    <div className="widget-body no-padding">
-                                        <BootstrapTable data={this.props.employee} version='4' pagination={true} selectRow={selectRowProp} options={options} ref='table' search>
+                                    <div className="widget-body">
+                                        <BootstrapTable data={this.props.employee} version='4' pagination={true} options={options} ref='table' search>
                                             <TableHeaderColumn isKey dataField='id' hidden={this.state.hidden}>ID</TableHeaderColumn>
                                             <TableHeaderColumn dataField='name'  dataSort={true} width='15%'>Name</TableHeaderColumn>
                                             <TableHeaderColumn dataField='email' dataSort={true} width='20%'>Email</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='phone' dataSort={true} width='20%'>Phone</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='department' dataSort={true} width='20%'>Department</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='action' dataFormat={ actionFormatter }>Action</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='phone' dataSort={true} width='15%'>Phone</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='department' dataSort={true} width='15%'>Department</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='button' dataFormat={this.actionButton.bind(this)}>Action</TableHeaderColumn>
                                         </BootstrapTable>
                                     </div>
                                 </div>
@@ -178,40 +200,40 @@ class EmployeeList extends React.Component {
                                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <h4 className="modal-title" id="myModalLabel">Add Employee</h4>
                             </div>
-                        <form className="" method="post"  name="employeeRegistrationForm"  onSubmit= {this.submitemployeeRegistrationForm} >
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="name">Name</label>
-                                            <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="email">Email</label>
-                                            <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="phone">Phone</label>
-                                            <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="phone">Department</label>
-                                            <select className="input-sm form-control" name="department" onChange={this.handleChange}>
-                                                <option value="0">Choose Department</option>
-                                                <option value="PHP Developer">PHP Developer</option>
-                                                <option value="Android Developer">Android Developer</option>
-                                                <option value="iOS Developer">iOS Developer</option>
-                                                <option value="BDE">BDE</option>
-                                            </select>
+                            <form className="" method="post"  name="employeeRegistrationForm"  onSubmit= {this.submitemployeeRegistrationForm} >
+                                <div className="modal-body">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="name">Name</label>
+                                                <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="email">Email</label>
+                                                <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="phone">Phone</label>
+                                                <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="phone">Department</label>
+                                                <select className="input-sm form-control" name="department" onChange={this.handleChange}>
+                                                    <option value="0">Choose Department</option>
+                                                    <option value="PHP Developer">PHP Developer</option>
+                                                    <option value="Android Developer">Android Developer</option>
+                                                    <option value="iOS Developer">iOS Developer</option>
+                                                    <option value="BDE">BDE</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button type="submit" className="btn btn-primary">Save</button>
-                        </div>
-                        </form>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" className="btn btn-primary">Save</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -219,16 +241,42 @@ class EmployeeList extends React.Component {
 
                 {/*****  Edit Model Body Start  *****/}
                     <Modal show={this.state.modalEdit}>
-                        <Modal.Body>
-                            <h1>Edit Employee</h1>
-                            <hr className="simple" />
-                            <h5>Instruction</h5>
-
-                            <div className="text-right">
-                                <button type="button" className="btn btn-success btn-lg" onClick={this.toggleEdit}>Cancel</button>
-                                <button type="button" className="btn btn-success btn-lg" onClick={this.props.onHide}>Save</button>
-                            </div>
-                        </Modal.Body>
+                        <form className="" method="post"  name="employeeEditForm">
+                            <Modal.Body>
+                                <h1>Edit Employee</h1>
+                                <hr className="simple" />
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="name">Name</label>
+                                                <input type="text" className="form-control" name="name" id="name" placeholder="" onChange={this.handleChange}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="email">Email</label>
+                                                <input type="text" className="form-control" name="email" id="email" placeholder="" onChange={this.handleChange}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="phone">Phone</label>
+                                                <input type="text" className="form-control" name="phone" id="phone" placeholder="" onChange={this.handleChange}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="phone">Department</label>
+                                                <select className="input-sm form-control" name="department" onChange={this.handleChange}>
+                                                    <option value="0">Choose Department</option>
+                                                    <option value="PHP Developer">PHP Developer</option>
+                                                    <option value="Android Developer">Android Developer</option>
+                                                    <option value="iOS Developer">iOS Developer</option>
+                                                    <option value="BDE">BDE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div className="text-right">
+                                    <button type="button" className="btn btn-success btn-lg" onClick={this.toggleEdit}>Cancel</button>&nbsp;&nbsp;
+                                    <button type="button" className="btn btn-success btn-lg" onClick={this.props.onHide}>Save</button>
+                                </div>
+                            </Modal.Body>
+                        </form>
                     </Modal>
                 {/*****  Edit Model Body End  *****/}
 
@@ -240,53 +288,3 @@ class EmployeeList extends React.Component {
 const mapDispatchToProps = { empGetEvent ,empAddEvent}
 const mapStateToProps = state => ({ employee: state.employee })
 export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList)
-
-
-
-class ActionButtonFormatter extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.toggleEdit = this.toggleEdit.bind(this);
-
-        this.state = {
-            modalEdit: false
-        }
-    }
-
-    toggleEdit() {
-        this.setState({
-            modalEdit: !this.state.modalEdit
-        });
-    }
-
-
-    handleEditClick = () => {
-        console.log("Edit Button Clicked=>");
-        console.log(this.props.active);
-        this.setState({
-            modalEdit: !this.state.modalEdit
-        });
-        console.log(this.state)
-    }
-
-    handleDeleteClick = () => {
-        console.log("Delete Button Clicked");
-    }
-
-    render() {
-        return (
-            <div>
-                <button onClick={ this.handleEditClick }>Edit {this.props.active.id}</button>
-                &nbsp;&nbsp;
-                <button onClick={ this.handleDeleteClick }>Delete</button>
-            </div>
-        );
-    }
-}
-
-function actionFormatter(cell, row) {
-    return (
-        <ActionButtonFormatter active={ row }/>
-    );
-}
