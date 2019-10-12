@@ -95,6 +95,42 @@ switch ($action) {
        
         echo json_encode($employee_arr);
         break;
+    case "update":
+        $data = json_decode(file_get_contents('php://input'), true);
+        $query ="UPDATE {$table} SET name = '{$data['name']}',email = '{$data['email']}',phone = '{$data['phone']}',department = '{$data['department']}' WHERE id={$data['id']}";
+        $result = $con->query($query);
+        $employee_arr=array();
+        $employee_arr["data"]=array();
+        if($result){
+            $query2 = "SELECT * FROM {$table} WHERE id = {$data['id']}";
+            $result2 = $con->query($query2);
+            $employee_arr=array();
+            $employee_arr["data"]=array();
+
+            if ($result2->num_rows > 0) {
+                $employee_arr["code"]=200;
+                while($row = $result2->fetch_assoc()) {
+                    extract($row);
+                    $employee_item=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "email" => $email,
+                        "phone" => $phone,
+                        "department" => $department,
+                        "status" => $status
+                    );
+                    array_push($employee_arr["data"], $employee_item);
+                }
+            } else {
+                $employee_arr["code"]=400;
+            }
+            echo json_encode($employee_arr);
+            exit;
+        }else{
+            $employee_arr["code"]=400;
+        }        
+        echo json_encode($employee_arr);
+        break;
     default:
         $query = "SELECT * FROM {$table}";
         $employee_arr=array();
