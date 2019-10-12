@@ -5,7 +5,7 @@ import { BigBreadcrumbs } from "../../../common/navigation";
 import {JarvisWidget} from "../../../common";
 import Datatable from "../../../common/tables/components/Datatable";
 import { connect } from 'react-redux'
-import { empGetEvent,empAddEvent,empGetIdEvent } from "../../../common/employee/employeeAction.js";
+import { empGetEvent,empAddEvent,empGetIdEvent,empEditEvent } from "../../../common/employee/employeeAction.js";
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import { Modal,ModalHeader,ModalBody,ModalFooter,Button } from "react-bootstrap";
@@ -16,14 +16,17 @@ class EmployeeList extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleEditChange = this.handleEditChange.bind(this);        
         this.toggleDanger = this.toggleDanger.bind(this);
         this.toggleEdit = this.toggleEdit.bind(this);
         this.submitemployeeRegistrationForm = this.submitemployeeRegistrationForm.bind(this);
+        this.submitemployeeEditForm = this.submitemployeeEditForm.bind(this);
+        
     
         this.state = {
             employee : {},
             fields : {},
-            selected : {},
+            editfields : {},
             error : {},
             employeedata : [],
             danger: false,
@@ -70,6 +73,13 @@ class EmployeeList extends React.Component {
         this.setState({fields});
     }
 
+    handleEditChange(e) {
+        let editfields = this.state.editfields;
+        editfields[e.target.name] = e.target.value;
+        this.setState({editfields});
+        //console.log('handleEditChange:',editfields);
+    }
+
     toggleEdit() {
         this.setState({
             modalEdit: !this.state.modalEdit
@@ -99,20 +109,19 @@ class EmployeeList extends React.Component {
     onClickEditSelected(cell, row, rowIndex){
         console.log('Edit #', row.id);
         this.props.empGetIdEvent(row.id)  //Function use to dispatch action
-        this.state.selected = this.props.employee.find((element) => {
+        this.state.editfields = this.props.employee.find((element) => {
             return element.id === row.id;
         })
-        console.log('Employee Edit',this.state.selected)
         this.toggleEdit();
-
     }
     
     onClickDeleteSelected(cell, row, rowIndex){
         console.log('Delete #', row.id);
-    }
+    }    
     
     async submitemployeeRegistrationForm(e) {
         e.preventDefault();
+        //console.log("submitemployeeRegistrationForm:",this.state.fields);
         await this.props.empAddEvent(this.state.fields)
         //alert("form submited");
         //console.log(this.state.fields);
@@ -125,6 +134,12 @@ class EmployeeList extends React.Component {
         //     this.setState({fields:fields});
         //     alert("Form submitted");
         // }    
+    }
+
+    async submitemployeeEditForm(e) {
+        e.preventDefault();
+        //console.log("submitemployeeEditForm:",this.state.editfields);
+        await this.props.empEditEvent(this.state.editfields)        
     }
 
     render() {
@@ -250,7 +265,7 @@ class EmployeeList extends React.Component {
 
                 {/*****  Edit Model Body Start  *****/}
                     <Modal show={this.state.modalEdit}>
-                        <form className="" method="post"  name="employeeEditForm">
+                        <form className="" method="post"  name="employeeEditForm" onSubmit= {this.submitemployeeEditForm}>
                             <Modal.Body>
                                 <h1>Edit Employee</h1>
                                 <hr className="simple" />
@@ -258,19 +273,19 @@ class EmployeeList extends React.Component {
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label htmlFor="name">Name</label>
-                                                <input type="text" className="form-control" name="name" id="name" value={this.state.selected.name} placeholder="" onChange={this.handleChange}/>
+                                                <input type="text" className="form-control" name="name" id="name" value={this.state.editfields.name} placeholder="" onChange={this.handleEditChange}/>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="email">Email</label>
-                                                <input type="text" className="form-control" name="email" id="email" value={this.state.selected.email} placeholder="" onChange={this.handleChange}/>
+                                                <input type="text" className="form-control" name="email" id="email" value={this.state.editfields.email} placeholder="" onChange={this.handleEditChange}/>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="phone">Phone</label>
-                                                <input type="text" className="form-control" name="phone" id="phone" value={this.state.selected.phone} placeholder="" onChange={this.handleChange}/>
+                                                <input type="text" className="form-control" name="phone" id="phone" value={this.state.editfields.phone} placeholder="" onChange={this.handleEditChange}/>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="phone">Department</label>
-                                                <select className="input-sm form-control" name="department" onChange={this.handleChange}>
+                                                <select className="input-sm form-control" name="department" value={this.state.editfields.department} onChange={this.handleEditChange}>
                                                     <option value="0">Choose Department</option>
                                                     <option value="PHP Developer">PHP Developer</option>
                                                     <option value="Android Developer">Android Developer</option>
@@ -282,7 +297,7 @@ class EmployeeList extends React.Component {
                                     </div>
                                 <div className="text-right">
                                     <button type="button" className="btn btn-sm btn-primary" onClick={this.toggleEdit}>Cancel</button>&nbsp;&nbsp;
-                                    <button type="button" className="btn btn-sm btn-sucess" onClick={this.props.onHide}>Save</button>
+                                    <button type="submit" className="btn btn-sm btn-sucess">Save</button>
                                 </div>
                             </Modal.Body>
                         </form>
@@ -294,6 +309,6 @@ class EmployeeList extends React.Component {
     }
 }
 
-const mapDispatchToProps = { empGetEvent ,empAddEvent,empGetIdEvent}
+const mapDispatchToProps = { empGetEvent ,empAddEvent,empGetIdEvent,empEditEvent}
 const mapStateToProps = state => ({ employee: state.employee })
 export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList)

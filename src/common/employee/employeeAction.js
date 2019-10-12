@@ -7,7 +7,7 @@ export const CREATE_EVENT = 'CREATE_EVENT'
 export const CREATE_EMP = 'CREATE_EMP'
 export const READ_EMPS = 'READ_EMPS'
 export const READ_EMP = 'READ_EMP'
-
+export const UPDATE_EMP = 'UPDATE_EMP'
 
 export const UPDATE_EVENT = 'UPDATE_EVENT'
 export const DELETE_EVENT = 'DELETE_EVENT'
@@ -35,3 +35,8 @@ export const empGetIdEvent= values => async dispatch => {
   dispatch({ type: READ_EMP, response })
 }
 
+export const empEditEvent = values => async dispatch => {
+  console.log('empEditEvent:',values);
+  const response = await axios.post(`http://192.168.0.157/reactApp/React_16.x/server/employee.php?action=update`, JSON.stringify(values))
+  dispatch({ type: UPDATE_EMP, response })
+}
