@@ -14,6 +14,8 @@ import { routes as ui } from "./views/ui";
 import { routes as widgets } from "./views/widgets";
 
 import { routes as employee } from "./views/employee";
+import { routes as post } from "./views/post";
+
 
 export const routes = [
   
@@ -30,7 +32,8 @@ export const routes = [
   ...tables,
   ...ui,
   ...widgets,
-  ...employee
+  ...employee,
+  ...post
 ];
 
 export const authRoutes = [

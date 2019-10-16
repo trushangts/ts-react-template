@@ -34,6 +34,17 @@
           "route": "/smartadmin/skins"
         }
       ]
+    },
+    {
+      "title": "Post",
+      "icon": "fa fa-lg fa-fw fa-cube txt-color-blue",
+      "items": [
+        {
+          "icon": "fa fa-picture-o",
+          "title": "Manage Post",
+          "route": "/postlist"
+        }
+      ]
     }
   ]
 }
